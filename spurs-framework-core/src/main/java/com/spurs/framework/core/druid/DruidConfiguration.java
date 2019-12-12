@@ -17,7 +17,7 @@ import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 
 @Configuration
-@PropertySources({ @PropertySource(value = "classpath:db/db.druid.default.properties"), @PropertySource(value = "classpath:db/db.druid.properties") })
+@PropertySources({ @PropertySource(value = "classpath:config/default/db/db.druid.default.properties"), @PropertySource(value = "classpath:config/db/db.druid.properties") })
 public class DruidConfiguration {
 
 	private static Logger logger = LoggerFactory.getLogger(DruidConfiguration.class);
