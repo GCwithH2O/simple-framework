@@ -2,10 +2,8 @@ package com.spurs.framework.core.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.spurs.framework.core.cache.ehchche.EhcacheUtil;
 import com.spurs.framework.core.cache.redis.RedisUtil;
 import com.spurs.framework.utils.SpringContextUtil;
 
@@ -23,27 +21,13 @@ public class CacheFactory {
 	private static Logger logger = LoggerFactory.getLogger(CacheFactory.class);
 
 	private static Cache cacheUtil;
-	@Value("${spring.cache.type}")
-	private String cacheType;
 
 	public static Cache get() {
 		if (cacheUtil == null) {
-			CacheFactory c = (CacheFactory) SpringContextUtil.getBean(CacheFactory.class);
-			if (c.getCacheType().equals(Cache.CACHE_TYPE_EHCACHE)) {
-				cacheUtil = (Cache) SpringContextUtil.getBean(EhcacheUtil.class);
-			} else if (c.getCacheType().equals(Cache.CACHE_TYPE_REDIS)) {
-				cacheUtil = (Cache) SpringContextUtil.getBean(RedisUtil.class);
-			}
-			logger.info("初始化缓存bean结束，当前缓存类型：" + c.getCacheType());
+			cacheUtil = (Cache) SpringContextUtil.getBean(RedisUtil.class);
+			logger.info("初始化缓存bean结束，当前缓存类型：redis");
 		}
 		return cacheUtil;
 	}
 
-	public String getCacheType() {
-		return cacheType;
-	}
-
-	public void setCacheType(String cacheType) {
-		this.cacheType = cacheType;
-	}
 }
