@@ -1,6 +1,7 @@
 package com.spurs.framework.core.jdbc.sqlExecutor.impl;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,20 +117,10 @@ public class SqlExecutor extends JdbcTemplateManager implements SqlExecutorInter
 		E obj = null;
 		try {
 			obj = clz.newInstance();
-			for (String key : map.keySet()) {
-				String value = map.get(key);
-				for (Field field : clz.getDeclaredFields()) {
-					String fieldName = field.getName();
-					if (StringUtils.isNotBlank(key) && key.equals(fieldName)) {
-						field.setAccessible(true);
-						field.set(obj, value);
-					}
-				}
-			}
-		} catch (InstantiationException | IllegalAccessException e1) {
+			BeanUtils.populate(obj, map);
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
-			logger.error("设置bean属性出错");
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 		return obj;
 	}
